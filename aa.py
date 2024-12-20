@@ -163,6 +163,7 @@ st.markdown('<h1 class="main-title">웹 페이지 요약 애플리케이션</h1>
 API_KEY = st.secrets["GEMINI_API_KEY"]
 
 # URL 입력 받기
+st.markdown("URL을 입력하세요:")
 st.markdown("""
     <style>
     /* URL 입력 컨테이너 스타일 */
@@ -206,9 +207,8 @@ st.markdown("""
             <input type="text" id="url-input" placeholder="https://example.com">
         </div>
         <button class="inner-arrow-button">➜</button>
+    </div>
 """, unsafe_allow_html=True)
-
-url = st.text_input("URL을 입력하세요:", placeholder="https://example.com")
 
 # URL 입력 후 요약 스타일 선택
 summary_style = st.selectbox(
