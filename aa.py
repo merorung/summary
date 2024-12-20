@@ -8,54 +8,49 @@ import google.generativeai as genai
 # 커스텀 CSS 추가
 st.markdown("""
 <style>
+    /* 전체 앱 컨테이너 */
     .stApp {
         max-width: 800px;
         margin: 0 auto;
         padding: 3rem 2rem;
-        background-color: #f8f9fc;
+        background-color: #f8f9fc;  /* 매우 연한 블루그레이 */
         font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
     }
+    
+    /* 메인 타이틀 */
     .main-title {
-        color: #2c3e50;
+        color: #2c3e50;  /* 깊이감 있는 네이비 */
         font-size: 2.25rem;
         font-weight: 800;
         text-align: center;
         margin-bottom: 3rem;
         padding-bottom: 1.5rem;
-        border-bottom: 3px solid #e2e8f0;
+        border-bottom: 3px solid #e2e8f0;  /* 은은한 그레이 */
         letter-spacing: -0.025em;
     }
-    /* 입력 컨테이너 스타일 */
-    .input-container {
-        position: relative;
+    
+    /* 입력 필드 */
+    .stTextInput input {
         width: 100%;
-        margin-bottom: 1rem;
-    }
-    /* text_input 영역에 패딩을 넉넉히 주어 오른쪽 공간 확보 */
-    div[data-testid="stTextInput"] > div {
-        padding-right: 3rem;
-    }
-    /* 버튼을 입력창 오른쪽 안쪽에 겹치도록 위치시킴 */
-    .input-container > div.stButton {
-        position: absolute;
-        right: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        background: none;
-        box-shadow: none;
-    }
-    .input-container > div.stButton > button {
-        background: none;
-        border: none;
-        font-size: 1.5rem;
-        color: #475569;
-        padding: 0;
-        cursor: pointer;
-    }
-    .input-container > div.stButton > button:hover {
-        color: #334155;
+        padding: 1rem;
+        border: 2px solid #e2e8f0;  /* 은은한 그레이 */
+        border-radius: 1rem;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        background-color: white;
     }
     
+    .stTextInput input:focus {
+        border-color: #64748b;  /* 중간 톤의 슬레이트 */
+        box-shadow: 0 0 0 4px rgba(100, 116, 139, 0.1);
+        outline: none;
+    }
+    
+    .stTextInput input::placeholder {
+        color: #94a3b8;  /* 밝은 슬레이트 */
+    }
+    
+    /* 결과 컨테이너 */
     .results-container {
         background-color: white;
         padding: 2rem;
@@ -64,8 +59,10 @@ st.markdown("""
         margin-top: 2rem;
         border: 1px solid #e2e8f0;
     }
+    
+    /* 결과 제목 */
     .results-container h3 {
-        color: #334155;
+        color: #334155;  /* 진한 슬레이트 */
         font-size: 1.5rem;
         font-weight: 700;
         margin: 0 0 1.5rem 0;
@@ -73,17 +70,23 @@ st.markdown("""
         border-bottom: 2px solid #e2e8f0;
         letter-spacing: -0.025em;
     }
+    
+    /* 결과 텍스트 */
     .results-container p {
-        color: #475569;
+        color: #475569;  /* 중간 톤의 슬레이트 */
         font-size: 1.1rem;
         line-height: 1.8;
         margin: 0;
         white-space: pre-line;
     }
+    
+    /* 로딩 스피너 */
     .stSpinner {
         text-align: center;
         color: #64748b;
     }
+    
+    /* 에러 메시지 */
     .stError {
         background-color: #fef2f2;
         color: #991b1b;
@@ -93,9 +96,13 @@ st.markdown("""
         margin-top: 1rem;
         font-weight: 500;
     }
+    
+    /* 전체 텍스트 색상 조정 */
     .stMarkdown {
         color: #334155;
     }
+
+    /* 버튼 스타일링 */
     .stButton button {
         background-color: #475569;
         color: white;
@@ -104,6 +111,7 @@ st.markdown("""
         border-radius: 0.5rem;
         transition: all 0.2s ease;
     }
+
     .stButton button:hover {
         background-color: #334155;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -111,18 +119,16 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# 제목을 커스텀 HTML로 표시
 st.markdown('<h1 class="main-title">웹페이지 요약 by 제임스</h1>', unsafe_allow_html=True)
 
+# API 키 입력
 API_KEY = st.secrets["GEMINI_API_KEY"]
 
-# 입력창과 버튼을 같은 컨테이너 안에 넣고 버튼을 겹치기
-container = st.container()
-with container:
-    st.markdown('<div class="input-container">', unsafe_allow_html=True)
-    url = st.text_input("URL을 입력하세요:", placeholder="https://example.com", key="url_input")
-    arrow_clicked = st.button("➜", help="URL 요약 실행")
-    st.markdown('</div>', unsafe_allow_html=True)
+# URL 입력 받기
+url = st.text_input("URL을 입력하세요:", placeholder="https://example.com")
 
+# URL 입력 후 요약 스타일 선택
 summary_style = st.selectbox(
     "요약 스타일을 선택하세요:",
     [
@@ -134,17 +140,21 @@ summary_style = st.selectbox(
     ]
 )
 
-if (arrow_clicked or (url and st.session_state.get("url_input"))) and st.session_state["url_input"].strip():
+if url:
     try:
+        # 로딩 상태 표시
         with st.spinner('웹 페이지를 분석 중입니다...'):
-            use_url = st.session_state["url_input"].strip()
-            loader = WebBaseLoader(use_url, header_template={'User-Agent': UserAgent().chrome})
+            # 웹 페이지 로딩
+            loader = WebBaseLoader(url, header_template={'User-Agent': UserAgent().chrome})
             docs = loader.load()
+            
+            # 텍스트 정제
             raw_page_content = docs[0].page_content
             cleaned_text = re.sub(r'\n+', '\n', raw_page_content)
             cleaned_text = re.sub(r'\s+', ' ', cleaned_text)
             cleaned_text = cleaned_text.strip()
 
+            # 모델 설정
             model_name = "gemini-1.5-pro"
             generation_config = {
                 "temperature": 0.7,
@@ -158,6 +168,7 @@ if (arrow_clicked or (url and st.session_state.get("url_input"))) and st.session
                 {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"}
             ]
 
+            # 기본 시스템 프롬프트 정의
             base_instruction = """
             기본 규칙:
             1. 모든 답변에는 마크다운 형식 적용
@@ -167,10 +178,13 @@ if (arrow_clicked or (url and st.session_state.get("url_input"))) and st.session
             5. 존댓말을 사용할 것
             """
 
+            # 선택된 스타일에 따라 시스템 지시어 변경
             system_instructions = {
+
                 "일반 요약": """
                 다음 내용을 먼저 일반적인 텍스트로 간단히 요약하고, 불렛 포인트를 활용하여 가독성을 높여주세요.
                 """,
+
                 "세줄 요약": """
                 다음 내용을 3개의 핵심 포인트로 요약해주세요.
                 규칙:
@@ -179,12 +193,14 @@ if (arrow_clicked or (url and st.session_state.get("url_input"))) and st.session
                 3. 문장은 '~입니다', '~했습니다'로 끝낼 것
                 4. 가장 중요한 내용만 간단명료하게 작성할 것
                 """,
+
                 "TLDR 한 줄 요약": """
                 다음 내용의 핵심을 단 한 문장으로 요약해주세요.
                 규칙:
                 1. 30단어 이내로 작성할 것
                 3. 가장 중요한 핵심 메시지만 포함할 것
                 """,
+                
                 "5가지 핵심 키워드": """
                 다음 내용에서 가장 중요한 5개의 키워드를 추출하고 설명해주세요.
                 형식:
@@ -194,6 +210,7 @@ if (arrow_clicked or (url and st.session_state.get("url_input"))) and st.session
                 4. [키워드4]: 설명
                 5. [키워드5]: 설명
                 """,
+                
                 "Q&A 형식": """
                 다음 내용을 Q&A 형식으로 정리해주세요.
                 규칙:
@@ -208,6 +225,7 @@ if (arrow_clicked or (url and st.session_state.get("url_input"))) and st.session
 
             system_instruction = system_instructions[summary_style]
 
+            # Gemini 모델 설정
             genai.configure(api_key=API_KEY)
             model = genai.GenerativeModel(
                 model_name=model_name,
@@ -215,6 +233,7 @@ if (arrow_clicked or (url and st.session_state.get("url_input"))) and st.session
                 safety_settings=safety_settings
             )
 
+            # 프롬프트 구성
             prompt = f"""
             역할: 당신은 전문적인 콘텐츠 요약 도우미입니다.
             
@@ -226,13 +245,16 @@ if (arrow_clicked or (url and st.session_state.get("url_input"))) and st.session
             {cleaned_text}
             """
 
+            # 직접 프롬프트로 응답 생성
             response = model.generate_content(prompt)
-
+            
+            # 결과를 커스텀 컨테이너에 표시
             st.markdown(f"""
             <div class="results-container">
                 <h3>요약 결과</h3>
                 <p>{response.text}</p>
             </div>
             """, unsafe_allow_html=True)
+
     except Exception as e:
-        st.error(f"오류가 발생했습니다: {str(e)}")
+        st.error(f"오류가 발생했습니다: {str(e)}") 
