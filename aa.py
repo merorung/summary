@@ -13,19 +13,19 @@ st.markdown("""
         max-width: 800px;
         margin: 0 auto;
         padding: 3rem 2rem;
-        background-color: #f8f9fc;  /* 매우 연한 블루그레이 */
+        background-color: #f8f9fc;
         font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
     }
     
     /* 메인 타이틀 */
     .main-title {
-        color: #2c3e50;  /* 깊이감 있는 네이비 */
+        color: #2c3e50;
         font-size: 2.25rem;
         font-weight: 800;
         text-align: center;
         margin-bottom: 3rem;
         padding-bottom: 1.5rem;
-        border-bottom: 3px solid #e2e8f0;  /* 은은한 그레이 */
+        border-bottom: 3px solid #e2e8f0;
         letter-spacing: -0.025em;
     }
     
@@ -80,7 +80,7 @@ st.markdown("""
     
     /* 결과 제목 */
     .results-container h3 {
-        color: #334155;  /* 진한 슬레이트 */
+        color: #334155;
         font-size: 1.5rem;
         font-weight: 700;
         margin: 0 0 1.5rem 0;
@@ -137,17 +137,17 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 제목을 커스텀 HTML로 표시
+# 제목
 st.markdown('<h1 class="main-title">웹페이지 요약 by 제임스</h1>', unsafe_allow_html=True)
 
 # API 키 설정
 API_KEY = st.secrets["GEMINI_API_KEY"]
 
-# 쿼리 파라미터 읽기
+# GET 파라미터에서 URL 읽기
 params = st.experimental_get_query_params()
-input_url = params.get("url", [None])[0]
+url = params.get("url", [""])[0]
 
-# 요약 스타일 선택 박스
+# 요약 스타일 선택
 summary_style = st.selectbox(
     "요약 스타일을 선택하세요:",
     [
@@ -159,22 +159,22 @@ summary_style = st.selectbox(
     ]
 )
 
-# URL 입력 폼
+# URL 입력 폼 (커스텀 HTML)
 st.markdown(
     f"""
     <form action="/" method="get" class="url-input-container">
-        <input type="text" name="url" placeholder="https://example.com" value="{input_url if input_url else ''}" />
+        <input type="text" name="url" placeholder="https://example.com" value="{url if url else ''}" />
         <button type="submit">➜</button>
     </form>
     """,
     unsafe_allow_html=True
 )
 
-if input_url:
+if url.strip():
     try:
         with st.spinner('웹 페이지를 분석 중입니다...'):
             # 웹 페이지 로딩
-            loader = WebBaseLoader(input_url, header_template={'User-Agent': UserAgent().chrome})
+            loader = WebBaseLoader(url, header_template={'User-Agent': UserAgent().chrome})
             docs = loader.load()
             
             # 텍스트 정제
@@ -207,7 +207,7 @@ if input_url:
             5. 존댓말을 사용할 것
             """
 
-            # 선택된 스타일에 따라 시스템 지시어 변경
+            # 스타일별 시스템 지시어
             system_instructions = {
                 "일반 요약": """
                 다음 내용을 먼저 일반적인 텍스트로 간단히 요약하고, 불렛 포인트를 활용하여 가독성을 높여주세요.
