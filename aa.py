@@ -125,6 +125,18 @@ st.markdown('<h1 class="main-title">웹 페이지 요약 애플리케이션</h1>
 # API 키 입력
 API_KEY = st.secrets["GEMINI_API_KEY"]
 
+# URL 입력 받기 전에 요약 스타일 선택 추가
+summary_style = st.selectbox(
+    "요약 스타일을 선택하세요:",
+    [
+        "기본 불렛포인트 요약",
+        "TLDR 한 줄 요약",
+        "5가지 핵심 키워드",
+        "뉴스 기사 형식",
+        "Q&A 형식"
+    ]
+)
+
 # URL 입력 받기
 url = st.text_input("URL을 입력하세요:", placeholder="https://example.com")
 
@@ -156,7 +168,16 @@ if url:
                 {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"}
             ]
 
-            system_instruction = "다음을 한국어로 불렛포인트 형식으로 3줄로 요약해줘. 어미는 ~임, ~함과 같이 간결하게 할 것. 각 문장의 앞에는 이모지를 하나 넣을 것."
+            # 선택된 스타일에 따라 시스템 지시어 변경
+            system_instructions = {
+                "기본 불렛포인트 요약": "다음을 한국어로 불렛포인트 형식으로 3줄로 요약해줘. 어미는 ~임, ~함과 같이 간결하게 할 것. 각 문장의 앞에는 이모지를 하나 넣을 것.",
+                "TLDR 한 줄 요약": "다음 내용을 한 문장으로 간단히 요약해줘. 'TLDR: ' 로 시작할 것.",
+                "5가지 핵심 키워드": "다음 내용에서 가장 중요한 5가지 키워드를 추출하고, 각각에 대해 한 줄로 설명해줘.",
+                "뉴스 기사 형식": "다음 내용을 뉴스 기사 형식으로 제목과 함께 3문단으로 요약해줘.",
+                "Q&A 형식": "다음 내용을 Q&A 형식으로 가장 중요한 3가지 질문과 답변으로 정리해줘."
+            }
+
+            system_instruction = system_instructions[summary_style]
 
             # Gemini 모델 설정
             genai.configure(api_key=API_KEY)
