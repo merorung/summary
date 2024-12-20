@@ -13,19 +13,19 @@ st.markdown("""
         max-width: 800px;
         margin: 0 auto;
         padding: 3rem 2rem;
-        background-color: #f8f9fc;  /* 매우 연한 블루그레이 */
+        background-color: #f8f9fc;
         font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
     }
     
     /* 메인 타이틀 */
     .main-title {
-        color: #2c3e50;  /* 깊이감 있는 네이비 */
+        color: #2c3e50;
         font-size: 2.25rem;
         font-weight: 800;
         text-align: center;
         margin-bottom: 3rem;
         padding-bottom: 1.5rem;
-        border-bottom: 3px solid #e2e8f0;  /* 은은한 그레이 */
+        border-bottom: 3px solid #e2e8f0;
         letter-spacing: -0.025em;
     }
     
@@ -33,7 +33,7 @@ st.markdown("""
     .stTextInput input {
         width: 100%;
         padding: 1rem;
-        border: 2px solid #e2e8f0;  /* 은은한 그레이 */
+        border: 2px solid #e2e8f0;
         border-radius: 1rem;
         font-size: 1rem;
         transition: all 0.2s ease;
@@ -41,13 +41,13 @@ st.markdown("""
     }
     
     .stTextInput input:focus {
-        border-color: #64748b;  /* 중간 톤의 슬레이트 */
+        border-color: #64748b;
         box-shadow: 0 0 0 4px rgba(100, 116, 139, 0.1);
         outline: none;
     }
     
     .stTextInput input::placeholder {
-        color: #94a3b8;  /* 밝은 슬레이트 */
+        color: #94a3b8;
     }
     
     /* 결과 컨테이너 */
@@ -62,7 +62,7 @@ st.markdown("""
     
     /* 결과 제목 */
     .results-container h3 {
-        color: #334155;  /* 진한 슬레이트 */
+        color: #334155;
         font-size: 1.5rem;
         font-weight: 700;
         margin: 0 0 1.5rem 0;
@@ -73,7 +73,7 @@ st.markdown("""
     
     /* 결과 텍스트 */
     .results-container p {
-        color: #475569;  /* 중간 톤의 슬레이트 */
+        color: #475569;
         font-size: 1.1rem;
         line-height: 1.8;
         margin: 0;
@@ -102,19 +102,122 @@ st.markdown("""
         color: #334155;
     }
 
-    /* 버튼 스타일링 */
-    .stButton button {
-        background-color: #475569;
+    /* 프라이머리 버튼 스타일링 */
+    .stButton button[kind="primary"] {
+        background-color: #22c55e;
         color: white;
         border: none;
         padding: 0.5rem 1rem;
         border-radius: 0.5rem;
         transition: all 0.2s ease;
+        width: 100%;
+        margin-top: 1.5rem;
     }
 
-    .stButton button:hover {
-        background-color: #334155;
+    .stButton button[kind="primary"]:hover {
+        background-color: #16a34a;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    /* URL 입력 컨테이너 스타일 */
+    .url-input-container {
+        position: relative;
+        width: 100%;
+    }
+    
+    /* 입력창 스타일 */
+    .stTextInput input {
+        width: 100%;
+        padding-right: 50px !important;  /* 버튼을 위한 공간 확보 */
+    }
+    
+    /* 내부 화살표 버튼 스타일 */
+    .inner-arrow-button {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: #475569;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        width: 35px;
+        height: 35px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
+    
+    .inner-arrow-button:hover {
+        background-color: #334155;
+    }
+
+    /* 숨길 요소 스타일 */
+    .hide-input {
+        display: none;
+    }
+    
+    .url-container {
+        position: relative;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .url-input {
+        width: 100%;
+        padding: 0.75rem 3rem 0.75rem 1rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 0.75rem;
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        background-color: white;
+    }
+    
+    .url-input:focus {
+        border-color: #64748b;
+        box-shadow: 0 0 0 4px rgba(100, 116, 139, 0.1);
+        outline: none;
+    }
+    
+    .url-button {
+        position: absolute;
+        right: 8px;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: #475569;
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
+    
+    .url-button:hover {
+        background-color: #334155;
+    }
+    
+    .url-button span {
+        font-size: 1.25rem;
+    }
+    
+    /* 실제 Streamlit input 숨기기 */
+    [data-testid="stTextInput"] {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -125,8 +228,18 @@ st.markdown('<h1 class="main-title">웹 페이지 요약 애플리케이션</h1>
 # API 키 입력
 API_KEY = st.secrets["GEMINI_API_KEY"]
 
-# URL 입력 받기
-url = st.text_input("URL을 입력하세요:", placeholder="https://example.com")
+# URL 입력 부분을 다음과 같이 수정
+st.markdown("""
+<div class="url-container">
+    <input type="text" class="url-input" placeholder="https://example.com">
+    <button class="url-button">
+        <span>→</span>
+    </button>
+</div>
+""", unsafe_allow_html=True)
+
+# 실제 기능을 위한 text_input은 숨김 처리
+url = st.text_input("", placeholder="https://example.com", key="url_input", label_visibility="collapsed")
 
 # URL 입력 후 요약 스타일 선택
 summary_style = st.selectbox(
@@ -140,6 +253,7 @@ summary_style = st.selectbox(
     ]
 )
 
+# URL 입력이 있을 때만 실행
 if url:
     try:
         # 로딩 상태 표시
@@ -180,9 +294,8 @@ if url:
 
             # 선택된 스타일에 따라 시스템 지시어 변경
             system_instructions = {
-
                 "일반 요약": """
-                다음 내용을 먼저 일반적인 텍스트로 간단히 요약하고, 불렛 포인트를 활용하여 가독성을 높여주세요.
+                다음 내용을 먼저 일반적인 텍스트로 간단히 용갸해주고, 불렛 포인트를 활용하여 가독성을 높여주세요.
                 """,
 
                 "세줄 요약": """
@@ -257,4 +370,4 @@ if url:
             """, unsafe_allow_html=True)
 
     except Exception as e:
-        st.error(f"오류가 발생했습니다: {str(e)}") 
+        st.error(f"오류가 발생했습니다: {str(e)}")
