@@ -118,9 +118,24 @@ st.markdown("""
         background-color: #16a34a;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
-</style>
-""", unsafe_allow_html=True)
 
+    /* URL 입력 컨테이너 스타일 */
+    .url-input-container {
+        position: relative;
+        width: 100%;
+    }
+    
+    /* 기존 입력창 스타일 수정 */
+    .stTextInput input {
+        width: 100%;
+        padding: 1rem 3.5rem 1rem 1rem !important;  /* 오른쪽 패딩 증가 */
+    }
+    
+    /* 화살표 버튼 스타일 */
+    .inner-arrow-button {
+        position: absolute;
+        right: 8px;
+        top: 50%;
 # 제목을 커스텀 HTML로 표시
 st.markdown('<h1 class="main-title">웹 페이지 요약 애플리케이션</h1>', unsafe_allow_html=True)
 
