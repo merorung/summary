@@ -167,7 +167,26 @@ API_KEY = st.secrets["GEMINI_API_KEY"]
 col1, col2 = st.columns([15, 1])  # 더 넓은 비율로 조정
 with col1:
     url = st.text_input("URL을 입력하세요:", placeholder="https://example.com")
-url = st.text_input("URL을 입력하세요:", placeholder="https://example.com  ➜")
+with col2:
+    st.markdown("""
+        <style>
+        .arrow-button {
+            margin-top: 25px;
+            padding: 10px 20px;
+            background-color: #475569;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .arrow-button:hover {
+            background-color: #334155;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        </style>
+        <button class="arrow-button">➜</button>
+    """, unsafe_allow_html=True)
 
 # URL 입력 후 요약 스타일 선택
 summary_style = st.selectbox(
