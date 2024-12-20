@@ -47,6 +47,13 @@ st.markdown("""
         margin-top: 2rem;
     }
     
+    .stMarkdown h3 {
+        margin-top: 0;
+        color: #1e293b;
+        font-size: 1.5rem;
+        font-weight: 600;
+    }
+    
     .stError {
         background-color: #fee2e2;
         color: #dc2626;
@@ -110,7 +117,7 @@ if url:
             
             # 결과를 커스텀 컨테이너에 표시
             st.markdown('<div class="results-container">', unsafe_allow_html=True)
-            st.subheader("요약 결과:")
+            st.markdown('### 요약 결과')
             st.write(messages_with_metadata.text)
             st.markdown('</div>', unsafe_allow_html=True)
 
