@@ -153,11 +153,6 @@ st.markdown("""
     .inner-arrow-button:hover {
         background-color: #334155;
     }
-
-    /* 숨길 요소 스타일 */
-    .hide-input {
-        display: none;
-    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -168,7 +163,6 @@ st.markdown('<h1 class="main-title">웹 페이지 요약 애플리케이션</h1>
 API_KEY = st.secrets["GEMINI_API_KEY"]
 
 # URL 입력 받기
-st.markdown("URL을 입력하세요:")
 st.markdown("""
     <style>
     /* URL 입력 컨테이너 스타일 */
@@ -205,25 +199,16 @@ st.markdown("""
     .inner-arrow-button:hover {
         background-color: #334155;
     }
-
-    /* 숨길 요소 스타일 */
-    .hide-input {
-        display: none;
-    }
     </style>
-""", unsafe_allow_html=True)
-
-# 숨겨진 입력창 (Python에서 값을 받기 위함)
-url = st.text_input("", key="hidden_url", label_visibility="hidden")
-
-st.markdown("""
+    
     <div class="url-input-container">
         <div class="stTextInput">
             <input type="text" id="url-input" placeholder="https://example.com">
         </div>
         <button class="inner-arrow-button">➜</button>
-    </div>
 """, unsafe_allow_html=True)
+
+url = st.text_input("URL을 입력하세요:", placeholder="https://example.com")
 
 # URL 입력 후 요약 스타일 선택
 summary_style = st.selectbox(
