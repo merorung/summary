@@ -13,19 +13,19 @@ st.markdown("""
         max-width: 800px;
         margin: 0 auto;
         padding: 3rem 2rem;
-        background-color: #f8f9fc;
+        background-color: #f8f9fc;  /* 매우 연한 블루그레이 */
         font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
     }
     
     /* 메인 타이틀 */
     .main-title {
-        color: #2c3e50;
+        color: #2c3e50;  /* 깊이감 있는 네이비 */
         font-size: 2.25rem;
         font-weight: 800;
         text-align: center;
         margin-bottom: 3rem;
         padding-bottom: 1.5rem;
-        border-bottom: 3px solid #e2e8f0;
+        border-bottom: 3px solid #e2e8f0;  /* 은은한 그레이 */
         letter-spacing: -0.025em;
     }
     
@@ -33,7 +33,7 @@ st.markdown("""
     .stTextInput input {
         width: 100%;
         padding: 1rem;
-        border: 2px solid #e2e8f0;
+        border: 2px solid #e2e8f0;  /* 은은한 그레이 */
         border-radius: 1rem;
         font-size: 1rem;
         transition: all 0.2s ease;
@@ -41,13 +41,13 @@ st.markdown("""
     }
     
     .stTextInput input:focus {
-        border-color: #64748b;
+        border-color: #64748b;  /* 중간 톤의 슬레이트 */
         box-shadow: 0 0 0 4px rgba(100, 116, 139, 0.1);
         outline: none;
     }
     
     .stTextInput input::placeholder {
-        color: #94a3b8;
+        color: #94a3b8;  /* 밝은 슬레이트 */
     }
     
     /* 결과 컨테이너 */
@@ -62,7 +62,7 @@ st.markdown("""
     
     /* 결과 제목 */
     .results-container h3 {
-        color: #334155;
+        color: #334155;  /* 진한 슬레이트 */
         font-size: 1.5rem;
         font-weight: 700;
         margin: 0 0 1.5rem 0;
@@ -73,7 +73,7 @@ st.markdown("""
     
     /* 결과 텍스트 */
     .results-container p {
-        color: #475569;
+        color: #475569;  /* 중간 톤의 슬레이트 */
         font-size: 1.1rem;
         line-height: 1.8;
         margin: 0;
@@ -102,61 +102,19 @@ st.markdown("""
         color: #334155;
     }
 
-    /* 프라이머리 버튼 스타일링 */
-    .stButton button[kind="primary"] {
-        background-color: #22c55e;
+    /* 버튼 스타일링 */
+    .stButton button {
+        background-color: #475569;
         color: white;
         border: none;
         padding: 0.5rem 1rem;
         border-radius: 0.5rem;
         transition: all 0.2s ease;
-        width: 100%;
-        margin-top: 1.5rem;
     }
 
-    .stButton button[kind="primary"]:hover {
-        background-color: #16a34a;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-
-    /* URL 입력 컨테이너 스타일 */
-    .url-input-container {
-        position: relative;
-        width: 100%;
-    }
-    
-    /* 입력창 스타일 */
-    .stTextInput input {
-        width: 100%;
-        padding-right: 50px !important;  /* 버튼을 위한 공간 확보 */
-    }
-    
-    /* 내부 화살표 버튼 스타일 */
-    .inner-arrow-button {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: #475569;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        width: 35px;
-        height: 35px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s ease;
-    }
-    
-    .inner-arrow-button:hover {
+    .stButton button:hover {
         background-color: #334155;
-    }
-
-    /* 숨길 요소 스타일 */
-    .hide-input {
-        display: none;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
 </style>
 """, unsafe_allow_html=True)
@@ -168,17 +126,7 @@ st.markdown('<h1 class="main-title">웹 페이지 요약 애플리케이션</h1>
 API_KEY = st.secrets["GEMINI_API_KEY"]
 
 # URL 입력 받기
-st.markdown("""
-    <div class="url-input-container">
-        <div class="stTextInput">
-            <input type="text" id="url-input" placeholder="https://example.com">
-        </div>
-        <button class="inner-arrow-button">➜</button>
-    </div>
-""", unsafe_allow_html=True)
-
-# 기존의 st.text_input을 스타일이 적용된 버전으로 대체
-url = st.text_input("", placeholder="https://example.com", key="styled_url_input")
+url = st.text_input("URL을 입력하세요:", placeholder="https://example.com")
 
 # URL 입력 후 요약 스타일 선택
 summary_style = st.selectbox(
@@ -192,7 +140,6 @@ summary_style = st.selectbox(
     ]
 )
 
-# URL 입력이 있을 때만 실행
 if url:
     try:
         # 로딩 상태 표시
@@ -218,23 +165,7 @@ if url:
                 {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
                 {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
                 {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
-                {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"}
-            ]
-
-            # 기본 시스템 프롬프트 정의
-            base_instruction = """
-            기본 규칙:
-            1. 모든 답변에는 마크다운 형식 적용
-            2. 모든 답변은 자연스러운 한국어로 제공할 것
-            3. 전문용어가 있다면 쉽게 풀어서 설명할 것
-            4. 문장은 간결하고 명확하게 작성할 것
-            5. 존댓말을 사용할 것
-            """
-
-            # 선택된 스타일에 따라 시스템 지시어 변경
-            system_instructions = {
-                "일반 요약": """
-                다음 내용을 먼저 일반적인 텍스트로 간단히 용갸해주고, 불렛 포인트를 활용하여 가독성을 높여주세요.
+                {"ca약해주고, 불렛 포인트를 활용하여 가독성을 높여주세요.
                 """,
 
                 "세줄 요약": """
@@ -309,4 +240,4 @@ if url:
             """, unsafe_allow_html=True)
 
     except Exception as e:
-        st.error(f"오류가 발생했습니다: {str(e)}")
+        st.error(f"오류가 발생했습니다: {str(e)}") 
