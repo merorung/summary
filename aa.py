@@ -164,44 +164,10 @@ st.markdown('<h1 class="main-title">웹 페이지 요약 애플리케이션</h1>
 API_KEY = st.secrets["GEMINI_API_KEY"]
 
 # URL 입력 받기
-col1, col2 = st.columns([6, 1])  # 6:1 비율로 분할
-with col1:
-    url = st.text_input("URL을 입력하세요:", placeholder="https://example.com", label_visibility="visible")
-    st.markdown("""
-        <div class="url-input-container">
-            <div class="stTextInput">
-                <input type="text" id="url-input" placeholder="➜  https://example.com">
-            </div>
-            <button class="inner-arrow-button">➜</button>
-        </div>
-    """, unsafe_allow_html=True)
+url = st.text_input("URL을 입력하세요:", placeholder="➜  https://example.com")
 
-# URL 값을 JavaScript로 가져오기 위한 코드 추가
-st.markdown("""
-    <script>
-        const urlInput = document.getElementById('url-input');
-        const arrowButton = document.querySelector('.inner-arrow-button');
-        
-        arrowButton.addEventListener('click', function() {
-            const url = urlInput.value;
-            // Streamlit에 URL 값 전달
-        });
-    </script>
-""", unsafe_allow_html=True)
-
-# URL 입력 후 요약 스타일 선택
-summary_style = st.selectbox(
-    "요약 스타일을 선택하세요:",
-    [
-        "일반 요약",
-        "세줄 요약",
-        "TLDR 한 줄 요약",
-        "5가지 핵심 키워드",
-        "Q&A 형식"
-    ]
-)
-
-if url and submit_button:
+# URL 입력이 있을 때만 실행
+if url:
     try:
         # 로딩 상태 표시
         with st.spinner('웹 페이지를 분석 중입니다...'):
