@@ -136,6 +136,27 @@ st.markdown("""
         position: absolute;
         right: 8px;
         top: 50%;
+        transform: translateY(-50%);
+        background-color: #475569;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        width: 35px;
+        height: 35px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+        font-size: 1.2rem;
+    }
+    
+    .inner-arrow-button:hover {
+        background-color: #334155;
+    }
+</style>
+""", unsafe_allow_html=True)
+
 # 제목을 커스텀 HTML로 표시
 st.markdown('<h1 class="main-title">웹 페이지 요약 애플리케이션</h1>', unsafe_allow_html=True)
 
@@ -145,28 +166,27 @@ API_KEY = st.secrets["GEMINI_API_KEY"]
 # URL 입력 받기
 col1, col2 = st.columns([6, 1])  # 6:1 비율로 분할
 with col1:
-    url = st.text_input("URL을 입력하세요:", placeholder="https://example.com", label_visibility="visible")
-
-with col2:
     st.markdown("""
-        <style>
-        .arrow-button {
-            margin-top: 25px;
-            padding: 10px 20px;
-            background-color: #475569;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .arrow-button:hover {
-            background-color: #334155;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-        </style>
-        <button class="arrow-button">➜</button>
+        <div class="url-input-container">
+            <div class="stTextInput">
+                <input type="text" id="url-input" placeholder="➜  https://example.com">
+            </div>
+            <button class="inner-arrow-button">➜</button>
+        </div>
     """, unsafe_allow_html=True)
+
+# URL 값을 JavaScript로 가져오기 위한 코드 추가
+st.markdown("""
+    <script>
+        const urlInput = document.getElementById('url-input');
+        const arrowButton = document.querySelector('.inner-arrow-button');
+        
+        arrowButton.addEventListener('click', function() {
+            const url = urlInput.value;
+            // Streamlit에 URL 값 전달
+        });
+    </script>
+""", unsafe_allow_html=True)
 
 # URL 입력 후 요약 스타일 선택
 summary_style = st.selectbox(
