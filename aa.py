@@ -28,7 +28,7 @@ st.markdown("""
         border-bottom: 3px solid #e2e8f0;
         letter-spacing: -0.025em;
     }
-    
+
     /* URL 입력 컨테이너 */
     .url-input-container {
         position: relative;
@@ -43,7 +43,7 @@ st.markdown("""
         font-size: 1rem;
         background-color: white;
         box-sizing: border-box;
-        padding-right: 3rem; /* 버튼 공간 확보 */
+        padding-right: 3rem; /* 화살표 공간 확보 */
     }
     .url-input-container input[type="text"]:focus {
         border-color: #64748b;
@@ -63,6 +63,7 @@ st.markdown("""
         font-size: 1.5rem;
         cursor: pointer;
         color: #475569;
+        padding: 0;
     }
     .url-input-container button:hover {
         color: #334155;
@@ -137,15 +138,26 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 제목
+# 제목 표시
 st.markdown('<h1 class="main-title">웹페이지 요약 by 제임스</h1>', unsafe_allow_html=True)
 
-# API 키 설정
+# API 키 입력
 API_KEY = st.secrets["GEMINI_API_KEY"]
 
-# GET 파라미터에서 URL 읽기
+# GET 파라미터에서 url 읽기
 params = st.experimental_get_query_params()
 url = params.get("url", [""])[0]
+
+# URL 입력 폼 (HTML)
+st.markdown(
+    f"""
+    <form action="/" method="get" class="url-input-container">
+        <input type="text" name="url" placeholder="https://example.com" value="{url if url else ''}" />
+        <button type="submit" title="요약하기">➜</button>
+    </form>
+    """,
+    unsafe_allow_html=True
+)
 
 # 요약 스타일 선택
 summary_style = st.selectbox(
@@ -159,19 +171,9 @@ summary_style = st.selectbox(
     ]
 )
 
-# URL 입력 폼 (커스텀 HTML)
-st.markdown(
-    f"""
-    <form action="/" method="get" class="url-input-container">
-        <input type="text" name="url" placeholder="https://example.com" value="{url if url else ''}" />
-        <button type="submit">➜</button>
-    </form>
-    """,
-    unsafe_allow_html=True
-)
-
 if url.strip():
     try:
+        # 로딩 상태 표시
         with st.spinner('웹 페이지를 분석 중입니다...'):
             # 웹 페이지 로딩
             loader = WebBaseLoader(url, header_template={'User-Agent': UserAgent().chrome})
@@ -207,7 +209,7 @@ if url.strip():
             5. 존댓말을 사용할 것
             """
 
-            # 스타일별 시스템 지시어
+            # 선택된 스타일에 따라 시스템 지시어 변경
             system_instructions = {
                 "일반 요약": """
                 다음 내용을 먼저 일반적인 텍스트로 간단히 요약하고, 불렛 포인트를 활용하여 가독성을 높여주세요.
@@ -273,10 +275,10 @@ if url.strip():
             {cleaned_text}
             """
 
-            # 응답 생성
+            # 직접 프롬프트로 응답 생성
             response = model.generate_content(prompt)
             
-            # 결과 표시
+            # 결과를 커스텀 컨테이너에 표시
             st.markdown(f"""
             <div class="results-container">
                 <h3>요약 결과</h3>
