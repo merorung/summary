@@ -153,6 +153,11 @@ st.markdown("""
     .inner-arrow-button:hover {
         background-color: #334155;
     }
+
+    /* 숨길 요소 스타일 */
+    .hide-input {
+        display: none;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -164,51 +169,16 @@ API_KEY = st.secrets["GEMINI_API_KEY"]
 
 # URL 입력 받기
 st.markdown("""
-    <style>
-    /* URL 입력 컨테이너 스타일 */
-    .url-input-container {
-        position: relative;
-        width: 100%;
-    }
-    
-    /* 입력창 스타일 */
-    .stTextInput input {
-        width: 100%;
-        padding-right: 50px !important;  /* 버튼을 위한 공간 확보 */
-    }
-    
-    /* 내부 화살표 버튼 스타일 */
-    .inner-arrow-button {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: #475569;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        width: 35px;
-        height: 35px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s ease;
-    }
-    
-    .inner-arrow-button:hover {
-        background-color: #334155;
-    }
-    </style>
-    
     <div class="url-input-container">
         <div class="stTextInput">
             <input type="text" id="url-input" placeholder="https://example.com">
         </div>
         <button class="inner-arrow-button">➜</button>
+    </div>
 """, unsafe_allow_html=True)
 
-url = st.text_input("URL을 입력하세요:", placeholder="https://example.com")
+# 기존의 st.text_input을 스타일이 적용된 버전으로 대체
+url = st.text_input("", placeholder="https://example.com", key="styled_url_input")
 
 # URL 입력 후 요약 스타일 선택
 summary_style = st.selectbox(
