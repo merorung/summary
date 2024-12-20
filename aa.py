@@ -8,58 +8,99 @@ import google.generativeai as genai
 # 커스텀 CSS 추가
 st.markdown("""
 <style>
+    /* 전체 앱 컨테이너 */
     .stApp {
-        max-width: 1200px;
+        max-width: 800px;  /* 더 좁은 컨테이너로 가독성 향상 */
         margin: 0 auto;
-        padding: 2rem;
-        background-color: #f8fafc;
+        padding: 3rem 2rem;
+        background-color: #fafafa;
+        font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
     }
     
+    /* 메인 타이틀 */
     .main-title {
-        color: #1e293b;
-        font-size: 2.5rem;
-        font-weight: 700;
+        color: #0f172a;
+        font-size: 2.25rem;
+        font-weight: 800;
         text-align: center;
-        margin-bottom: 2rem;
-        padding-bottom: 1rem;
-        border-bottom: 2px solid #e2e8f0;
+        margin-bottom: 3rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 3px solid #e2e8f0;
+        letter-spacing: -0.025em;
     }
     
+    /* 입력 필드 */
     .stTextInput input {
         width: 100%;
-        padding: 0.75rem;
+        padding: 1rem;
         border: 2px solid #e2e8f0;
-        border-radius: 0.5rem;
+        border-radius: 1rem;
         font-size: 1rem;
-        transition: all 0.3s ease;
+        transition: all 0.2s ease;
+        background-color: white;
     }
     
     .stTextInput input:focus {
         border-color: #3b82f6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        outline: none;
     }
     
+    .stTextInput input::placeholder {
+        color: #94a3b8;
+    }
+    
+    /* 결과 컨테이너 */
     .results-container {
         background-color: white;
-        padding: 1.5rem;
-        border-radius: 0.75rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 
+                    0 10px 15px -3px rgba(0, 0, 0, 0.05);
         margin-top: 2rem;
+        border: 1px solid #e2e8f0;
     }
     
-    .stMarkdown h3 {
-        margin-top: 0;
-        color: #1e293b;
+    /* 결과 제목 */
+    .results-container h3 {
+        color: #0f172a;
         font-size: 1.5rem;
-        font-weight: 600;
+        font-weight: 700;
+        margin: 0 0 1.5rem 0;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #f1f5f9;
+        letter-spacing: -0.025em;
     }
     
+    /* 결과 텍스트 */
+    .results-container p {
+        color: #334155;
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin: 0;
+        white-space: pre-line;  /* 줄바꿈 유지 */
+    }
+    
+    /* 로딩 스피너 */
+    .stSpinner {
+        text-align: center;
+        color: #3b82f6;
+    }
+    
+    /* 에러 메시지 */
     .stError {
-        background-color: #fee2e2;
+        background-color: #fef2f2;
         color: #dc2626;
         padding: 1rem;
-        border-radius: 0.5rem;
-        border: 1px solid #fecaca;
+        border-radius: 0.75rem;
+        border: 1px solid #fee2e2;
+        margin-top: 1rem;
+        font-weight: 500;
+    }
+    
+    /* 전체 텍스트 색상 조정 */
+    .stMarkdown {
+        color: #334155;
     }
 </style>
 """, unsafe_allow_html=True)
