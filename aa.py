@@ -125,16 +125,16 @@ st.markdown("""
         width: 100%;
     }
     
-    /* 기존 입력창 스타일 수정 */
+    /* 입력창 스타일 */
     .stTextInput input {
         width: 100%;
-        padding: 1rem 3.5rem 1rem 1rem !important;  /* 오른쪽 패딩 증가 */
+        padding-right: 50px !important;  /* 버튼을 위한 공간 확보 */
     }
     
-    /* 화살표 버튼 스타일 */
+    /* 내부 화살표 버튼 스타일 */
     .inner-arrow-button {
         position: absolute;
-        right: 8px;
+        right: 10px;
         top: 50%;
         transform: translateY(-50%);
         background-color: #475569;
@@ -148,7 +148,6 @@ st.markdown("""
         align-items: center;
         justify-content: center;
         transition: all 0.2s ease;
-        font-size: 1.2rem;
     }
     
     .inner-arrow-button:hover {
@@ -164,6 +163,18 @@ st.markdown('<h1 class="main-title">웹 페이지 요약 애플리케이션</h1>
 API_KEY = st.secrets["GEMINI_API_KEY"]
 
 # URL 입력 받기
+st.markdown("""
+    <style>
+    /* URL 입력 컨테이너 스타일 */
+    .url-input-container {
+        position: relative;
+        width: 100%;
+    }
+    
+    /* 입력창 스타일 */
+    .stTextInput input {
+        width: 100%;
+        padding-right: 50px !important;  /* 버튼을 위한 공간 확보 */
 col1, col2 = st.columns([15, 1])  # 더 넓은 비율로 조정
 with col1:
     url = st.text_input("URL을 입력하세요:", placeholder="https://example.com")
