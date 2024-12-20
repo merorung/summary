@@ -13,19 +13,19 @@ st.markdown("""
         max-width: 800px;
         margin: 0 auto;
         padding: 3rem 2rem;
-        background-color: #f8f9fc;
+        background-color: #f8f9fc;  /* 매우 연한 블루그레이 */
         font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
     }
     
     /* 메인 타이틀 */
     .main-title {
-        color: #2c3e50;
+        color: #2c3e50;  /* 깊이감 있는 네이비 */
         font-size: 2.25rem;
         font-weight: 800;
         text-align: center;
         margin-bottom: 3rem;
         padding-bottom: 1.5rem;
-        border-bottom: 3px solid #e2e8f0;
+        border-bottom: 3px solid #e2e8f0;  /* 은은한 그레이 */
         letter-spacing: -0.025em;
     }
     
@@ -33,7 +33,7 @@ st.markdown("""
     .stTextInput input {
         width: 100%;
         padding: 1rem;
-        border: 2px solid #e2e8f0;
+        border: 2px solid #e2e8f0;  /* 은은한 그레이 */
         border-radius: 1rem;
         font-size: 1rem;
         transition: all 0.2s ease;
@@ -41,13 +41,13 @@ st.markdown("""
     }
     
     .stTextInput input:focus {
-        border-color: #64748b;
+        border-color: #64748b;  /* 중간 톤의 슬레이트 */
         box-shadow: 0 0 0 4px rgba(100, 116, 139, 0.1);
         outline: none;
     }
     
     .stTextInput input::placeholder {
-        color: #94a3b8;
+        color: #94a3b8;  /* 밝은 슬레이트 */
     }
     
     /* 결과 컨테이너 */
@@ -62,7 +62,7 @@ st.markdown("""
     
     /* 결과 제목 */
     .results-container h3 {
-        color: #334155;
+        color: #334155;  /* 진한 슬레이트 */
         font-size: 1.5rem;
         font-weight: 700;
         margin: 0 0 1.5rem 0;
@@ -73,7 +73,7 @@ st.markdown("""
     
     /* 결과 텍스트 */
     .results-container p {
-        color: #475569;
+        color: #475569;  /* 중간 톤의 슬레이트 */
         font-size: 1.1rem;
         line-height: 1.8;
         margin: 0;
@@ -102,82 +102,47 @@ st.markdown("""
         color: #334155;
     }
 
-    /* 프라이머리 버튼 스타일링 */
-    .stButton button[kind="primary"] {
-        background-color: #22c55e;
+    /* 버튼 스타일링 */
+    .stButton button {
+        background-color: #475569;
         color: white;
         border: none;
         padding: 0.5rem 1rem;
         border-radius: 0.5rem;
         transition: all 0.2s ease;
-        width: 100%;
-        margin-top: 1.5rem;
     }
 
-    .stButton button[kind="primary"]:hover {
-        background-color: #16a34a;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-    }
-
-    /* URL 입력 컨테이너 스타일 */
-    .url-input-container {
-        position: relative;
-        width: 100%;
-    }
-    
-    /* 입력창 스타일 */
-    .stTextInput input {
-        width: 100%;
-        padding-right: 50px !important;  /* 버튼을 위한 공간 확보 */
-    }
-    
-    /* 내부 화살표 버튼 스타일 */
-    .inner-arrow-button {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: #475569;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        width: 35px;
-        height: 35px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s ease;
-    }
-    
-    .inner-arrow-button:hover {
+    .stButton button:hover {
         background-color: #334155;
-    }
-
-    /* 숨길 요소 스타일 */
-    .hide-input {
-        display: none;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
 </style>
 """, unsafe_allow_html=True)
 
 # 제목을 커스텀 HTML로 표시
-st.markdown('<h1 class="main-title">웹 페이지 요약 애플리케이션</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="main-title">웹페이지 요약 by 제임스</h1>', unsafe_allow_html=True)
 
 # API 키 입력
 API_KEY = st.secrets["GEMINI_API_KEY"]
 
-# HTML 컴포넌트 부분을 columns로 변경
-col1, col2 = st.columns([6,1])  # 6:1 비율로 분할
+# URL 입력 받기
+url = st.text_input("URL을 입력하세요:", placeholder="https://example.com")
 
-with col1:
-    url = st.text_input("", placeholder="https://example.com", label_visibility="collapsed")
-with col2:
-    submit_button = st.button("➜", key="submit", help="URL 분석 시작")
+# URL 입력 후 요약 스타일 선택
+summary_style = st.selectbox(
+    "요약 스타일을 선택하세요:",
+    [
+        "일반 요약",
+        "세줄 요약",
+        "TLDR 한 줄 요약",
+        "5가지 핵심 키워드",
+        "Q&A 형식"
+    ]
+)
 
-# URL과 버튼이 눌렸을 때만 실행되도록 조건 수정
-if url and submit_button:
+if url:
     try:
+        # 로딩 상태 표시
         with st.spinner('웹 페이지를 분석 중입니다...'):
             # 웹 페이지 로딩
             loader = WebBaseLoader(url, header_template={'User-Agent': UserAgent().chrome})
@@ -215,8 +180,9 @@ if url and submit_button:
 
             # 선택된 스타일에 따라 시스템 지시어 변경
             system_instructions = {
+
                 "일반 요약": """
-                다음 내용을 먼저 일반적인 텍스트로 간단히 용갸해주고, 불렛 포인트를 활용하여 가독성을 높여주세요.
+                다음 내용을 먼저 일반적인 텍스트로 간단히 요약하고, 불렛 포인트를 활용하여 가독성을 높여주세요.
                 """,
 
                 "세줄 요약": """
@@ -257,7 +223,6 @@ if url and submit_button:
                 """
             }
 
-            summary_style = "일반 요약"
             system_instruction = system_instructions[summary_style]
 
             # Gemini 모델 설정
@@ -292,4 +257,4 @@ if url and submit_button:
             """, unsafe_allow_html=True)
 
     except Exception as e:
-        st.error(f"오류가 발생했습니다: {str(e)}")
+        st.error(f"오류가 발생했습니다: {str(e)}") 
