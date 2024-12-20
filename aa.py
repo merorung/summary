@@ -118,6 +118,49 @@ st.markdown("""
         background-color: #16a34a;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
+
+    /* URL 입력 컨테이너 스타일링 */
+    .url-input-container {
+        display: flex;
+        align-items: center;
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 1rem;
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    /* URL 입력창 스타일링 */
+    .url-input-container .stTextInput {
+        flex-grow: 1;
+        margin-bottom: 0;
+    }
+    
+    .url-input-container .stTextInput input {
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        padding: 0.5rem !important;
+    }
+    
+    /* 분석 버튼 스타일링 */
+    .url-input-container .stButton {
+        margin-left: 0.5rem;
+    }
+    
+    .url-input-container .stButton button {
+        background-color: #22c55e;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .url-input-container .stButton button:hover {
+        background-color: #16a34a;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -127,9 +170,58 @@ st.markdown('<h1 class="main-title">웹 페이지 요약 애플리케이션</h1>
 # API 키 입력
 API_KEY = st.secrets["GEMINI_API_KEY"]
 
-# URL 입력 받기
-col1, col2 = st.columns([4, 1])  # 4:1 비율로 컬럼 분할
+# URL 입력 부분을 다음과 같이 수정
+st.markdown("""
+<style>
+    /* URL 입력 컨테이너 스타일링 */
+    .url-input-container {
+        display: flex;
+        align-items: center;
+        background: white;
+        border: 2px solid #e2e8f0;
+        border-radius: 1rem;
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    
+    /* URL 입력창 스타일링 */
+    .url-input-container .stTextInput {
+        flex-grow: 1;
+        margin-bottom: 0;
+    }
+    
+    .url-input-container .stTextInput input {
+        border: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        padding: 0.5rem !important;
+    }
+    
+    /* 분석 버튼 스타일링 */
+    .url-input-container .stButton {
+        margin-left: 0.5rem;
+    }
+    
+    .url-input-container .stButton button {
+        background-color: #22c55e;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .url-input-container .stButton button:hover {
+        background-color: #16a34a;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# URL 입력 컨테이너 생성
+col1, col2 = st.columns([6, 1])
 with col1:
+    url = st.text_input("", placeholder="무엇이든 요약하세요 (유튜브, 웹사이트, 텍스트)", label_visibility="collapsed")
     url = st.text_input("URL을 입력하세요:", placeholder="https://example.com")
 with col2:
     submit_button = st.button("분석", type="primary")
