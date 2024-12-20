@@ -29,25 +29,43 @@ st.markdown("""
         letter-spacing: -0.025em;
     }
     
-    /* 입력 필드 */
-    .stTextInput input {
+    /* URL 입력 컨테이너 */
+    .url-input-container {
+        position: relative;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    .url-input-container input[type="text"] {
         width: 100%;
         padding: 1rem;
-        border: 2px solid #e2e8f0;  /* 은은한 그레이 */
+        border: 2px solid #e2e8f0;
         border-radius: 1rem;
         font-size: 1rem;
-        transition: all 0.2s ease;
         background-color: white;
+        box-sizing: border-box;
+        padding-right: 3rem; /* 버튼 공간 확보 */
     }
-    
-    .stTextInput input:focus {
-        border-color: #64748b;  /* 중간 톤의 슬레이트 */
+    .url-input-container input[type="text"]:focus {
+        border-color: #64748b;
         box-shadow: 0 0 0 4px rgba(100, 116, 139, 0.1);
         outline: none;
     }
-    
-    .stTextInput input::placeholder {
-        color: #94a3b8;  /* 밝은 슬레이트 */
+    .url-input-container input::placeholder {
+        color: #94a3b8;
+    }
+    .url-input-container button {
+        position: absolute;
+        right: 0.75rem;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #475569;
+    }
+    .url-input-container button:hover {
+        color: #334155;
     }
     
     /* 결과 컨테이너 */
@@ -73,7 +91,7 @@ st.markdown("""
     
     /* 결과 텍스트 */
     .results-container p {
-        color: #475569;  /* 중간 톤의 슬레이트 */
+        color: #475569;
         font-size: 1.1rem;
         line-height: 1.8;
         margin: 0;
@@ -122,13 +140,14 @@ st.markdown("""
 # 제목을 커스텀 HTML로 표시
 st.markdown('<h1 class="main-title">웹페이지 요약 by 제임스</h1>', unsafe_allow_html=True)
 
-# API 키 입력
+# API 키 설정
 API_KEY = st.secrets["GEMINI_API_KEY"]
 
-# URL 입력 받기
-url = st.text_input("URL을 입력하세요:", placeholder="https://example.com")
+# 쿼리 파라미터 읽기
+params = st.experimental_get_query_params()
+input_url = params.get("url", [None])[0]
 
-# URL 입력 후 요약 스타일 선택
+# 요약 스타일 선택 박스
 summary_style = st.selectbox(
     "요약 스타일을 선택하세요:",
     [
@@ -140,12 +159,22 @@ summary_style = st.selectbox(
     ]
 )
 
-if url:
+# URL 입력 폼
+st.markdown(
+    f"""
+    <form action="/" method="get" class="url-input-container">
+        <input type="text" name="url" placeholder="https://example.com" value="{input_url if input_url else ''}" />
+        <button type="submit">➜</button>
+    </form>
+    """,
+    unsafe_allow_html=True
+)
+
+if input_url:
     try:
-        # 로딩 상태 표시
         with st.spinner('웹 페이지를 분석 중입니다...'):
             # 웹 페이지 로딩
-            loader = WebBaseLoader(url, header_template={'User-Agent': UserAgent().chrome})
+            loader = WebBaseLoader(input_url, header_template={'User-Agent': UserAgent().chrome})
             docs = loader.load()
             
             # 텍스트 정제
@@ -180,7 +209,6 @@ if url:
 
             # 선택된 스타일에 따라 시스템 지시어 변경
             system_instructions = {
-
                 "일반 요약": """
                 다음 내용을 먼저 일반적인 텍스트로 간단히 요약하고, 불렛 포인트를 활용하여 가독성을 높여주세요.
                 """,
@@ -245,10 +273,10 @@ if url:
             {cleaned_text}
             """
 
-            # 직접 프롬프트로 응답 생성
+            # 응답 생성
             response = model.generate_content(prompt)
             
-            # 결과를 커스텀 컨테이너에 표시
+            # 결과 표시
             st.markdown(f"""
             <div class="results-container">
                 <h3>요약 결과</h3>
@@ -257,4 +285,4 @@ if url:
             """, unsafe_allow_html=True)
 
     except Exception as e:
-        st.error(f"오류가 발생했습니다: {str(e)}") 
+        st.error(f"오류가 발생했습니다: {str(e)}")
