@@ -153,6 +153,11 @@ st.markdown("""
     .inner-arrow-button:hover {
         background-color: #334155;
     }
+
+    /* 숨길 요소 스타일 */
+    .hide-input {
+        display: none;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -200,8 +205,18 @@ st.markdown("""
     .inner-arrow-button:hover {
         background-color: #334155;
     }
+
+    /* 숨길 요소 스타일 */
+    .hide-input {
+        display: none;
+    }
     </style>
-    
+""", unsafe_allow_html=True)
+
+# 숨겨진 입력창 (Python에서 값을 받기 위함)
+url = st.text_input("", key="hidden_url", label_visibility="hidden")
+
+st.markdown("""
     <div class="url-input-container">
         <div class="stTextInput">
             <input type="text" id="url-input" placeholder="https://example.com">
