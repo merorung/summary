@@ -120,7 +120,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # 제목을 커스텀 HTML로 표시
-st.markdown('<h1 class="main-title">웹페이지 요약 앱 by 제임스</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="main-title">웹페이지 요약 by 제임스</h1>', unsafe_allow_html=True)
 
 # API 키 입력
 API_KEY = st.secrets["GEMINI_API_KEY"]
