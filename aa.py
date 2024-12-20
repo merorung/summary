@@ -165,7 +165,24 @@ if url:
                 {"category": "HARM_CATEGORY_HARASSMENT", "threshold": "BLOCK_NONE"},
                 {"category": "HARM_CATEGORY_HATE_SPEECH", "threshold": "BLOCK_NONE"},
                 {"category": "HARM_CATEGORY_SEXUALLY_EXPLICIT", "threshold": "BLOCK_NONE"},
-                {"ca약해주고, 불렛 포인트를 활용하여 가독성을 높여주세요.
+                {"category": "HARM_CATEGORY_DANGEROUS_CONTENT", "threshold": "BLOCK_NONE"}
+            ]
+
+            # 기본 시스템 프롬프트 정의
+            base_instruction = """
+            기본 규칙:
+            1. 모든 답변에는 마크다운 형식 적용
+            2. 모든 답변은 자연스러운 한국어로 제공할 것
+            3. 전문용어가 있다면 쉽게 풀어서 설명할 것
+            4. 문장은 간결하고 명확하게 작성할 것
+            5. 존댓말을 사용할 것
+            """
+
+            # 선택된 스타일에 따라 시스템 지시어 변경
+            system_instructions = {
+
+                "일반 요약": """
+                다음 내용을 먼저 일반적인 텍스트로 간단히 요약하고, 불렛 포인트를 활용하여 가독성을 높여주세요.
                 """,
 
                 "세줄 요약": """
