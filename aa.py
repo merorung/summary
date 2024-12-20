@@ -200,13 +200,6 @@ st.markdown("""
         background-color: #334155;
     }
     </style>
-    
-    <div class="url-input-container">
-        <div class="stTextInput">
-            <input type="text" placeholder="https://example.com">
-        </div>
-        <button class="inner-arrow-button">➜</button>
-    </div>
 """, unsafe_allow_html=True)
 
 url = st.text_input("URL을 입력하세요:", placeholder="https://example.com")
