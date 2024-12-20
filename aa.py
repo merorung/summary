@@ -116,10 +116,12 @@ if url:
             messages_with_metadata = chat_session.send_message(cleaned_text)
             
             # 결과를 커스텀 컨테이너에 표시
-            st.markdown('<div class="results-container">', unsafe_allow_html=True)
-            st.markdown('### 요약 결과')
-            st.write(messages_with_metadata.text)
-            st.markdown('</div>', unsafe_allow_html=True)
+            st.markdown(f"""
+            <div class="results-container">
+                <h3>요약 결과</h3>
+                <p>{messages_with_metadata.text}</p>
+            </div>
+            """, unsafe_allow_html=True)
 
     except Exception as e:
         st.error(f"오류가 발생했습니다: {str(e)}") 
