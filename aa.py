@@ -15,6 +15,8 @@ st.markdown("""
         padding: 3rem 2rem;
         background-color: #f8f9fc;
         font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+        position: relative;
+        z-index: 1;
     }
     
     /* 메인 타이틀 */
@@ -34,6 +36,7 @@ st.markdown("""
         position: relative;
         width: 100%;
         margin-bottom: 1rem;
+        z-index: 999;
     }
     .url-input-container input[type="text"] {
         width: 100%;
@@ -43,7 +46,7 @@ st.markdown("""
         font-size: 1rem;
         background-color: white;
         box-sizing: border-box;
-        padding-right: 3rem; /* 화살표 공간 확보 */
+        padding-right: 3rem;
     }
     .url-input-container input[type="text"]:focus {
         border-color: #64748b;
@@ -141,7 +144,7 @@ st.markdown("""
 # 제목 표시
 st.markdown('<h1 class="main-title">웹페이지 요약 by 제임스</h1>', unsafe_allow_html=True)
 
-# API 키 입력
+# API 키 설정
 API_KEY = st.secrets["GEMINI_API_KEY"]
 
 # GET 파라미터에서 url 읽기
@@ -151,7 +154,7 @@ url = params.get("url", [""])[0]
 # URL 입력 폼 (HTML)
 st.markdown(
     f"""
-    <form action="/" method="get" class="url-input-container">
+    <form action="" method="get" class="url-input-container">
         <input type="text" name="url" placeholder="https://example.com" value="{url if url else ''}" />
         <button type="submit" title="요약하기">➜</button>
     </form>
@@ -173,7 +176,6 @@ summary_style = st.selectbox(
 
 if url.strip():
     try:
-        # 로딩 상태 표시
         with st.spinner('웹 페이지를 분석 중입니다...'):
             # 웹 페이지 로딩
             loader = WebBaseLoader(url, header_template={'User-Agent': UserAgent().chrome})
@@ -209,12 +211,11 @@ if url.strip():
             5. 존댓말을 사용할 것
             """
 
-            # 선택된 스타일에 따라 시스템 지시어 변경
+            # 선택된 스타일에 따른 시스템 지시어
             system_instructions = {
                 "일반 요약": """
                 다음 내용을 먼저 일반적인 텍스트로 간단히 요약하고, 불렛 포인트를 활용하여 가독성을 높여주세요.
                 """,
-
                 "세줄 요약": """
                 다음 내용을 3개의 핵심 포인트로 요약해주세요.
                 규칙:
@@ -223,14 +224,12 @@ if url.strip():
                 3. 문장은 '~입니다', '~했습니다'로 끝낼 것
                 4. 가장 중요한 내용만 간단명료하게 작성할 것
                 """,
-
                 "TLDR 한 줄 요약": """
                 다음 내용의 핵심을 단 한 문장으로 요약해주세요.
                 규칙:
                 1. 30단어 이내로 작성할 것
                 3. 가장 중요한 핵심 메시지만 포함할 것
                 """,
-                
                 "5가지 핵심 키워드": """
                 다음 내용에서 가장 중요한 5개의 키워드를 추출하고 설명해주세요.
                 형식:
@@ -240,7 +239,6 @@ if url.strip():
                 4. [키워드4]: 설명
                 5. [키워드5]: 설명
                 """,
-                
                 "Q&A 형식": """
                 다음 내용을 Q&A 형식으로 정리해주세요.
                 규칙:
@@ -275,10 +273,10 @@ if url.strip():
             {cleaned_text}
             """
 
-            # 직접 프롬프트로 응답 생성
+            # 응답 생성
             response = model.generate_content(prompt)
             
-            # 결과를 커스텀 컨테이너에 표시
+            # 결과 표시
             st.markdown(f"""
             <div class="results-container">
                 <h3>요약 결과</h3>
