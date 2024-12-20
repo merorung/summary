@@ -158,108 +158,7 @@ st.markdown("""
     .hide-input {
         display: none;
     }
-    
-    .url-container {
-        position: relative;
-        width: 100%;
-        margin-bottom: 1rem;
-    }
-    
-    .url-input {
-        width: 100%;
-        padding: 0.75rem 3rem 0.75rem 1rem;
-        border: 2px solid #e2e8f0;
-        border-radius: 0.75rem;
-        font-size: 1rem;
-        transition: all 0.2s ease;
-        background-color: white;
-    }
-    
-    .url-input:focus {
-        border-color: #64748b;
-        box-shadow: 0 0 0 4px rgba(100, 116, 139, 0.1);
-        outline: none;
-    }
-    
-    .url-button {
-        position: absolute;
-        right: 8px;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: #475569;
-        color: white;
-        border: none;
-        border-radius: 0.5rem;
-        width: 2.5rem;
-        height: 2.5rem;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.2s ease;
-    }
-    
-    .url-button:hover {
-        background-color: #334155;
-    }
-    
-    .url-button span {
-        font-size: 1.5rem;
-        font-weight: 700;
-    }
-    
-    /* 실제 Streamlit input 숨기기 */
-    [data-testid="stTextInput"] {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
-    }
 </style>
-
-<script>
-    // JavaScript 코드를 실행하기 위한 함수
-    function init() {
-        const urlButton = document.querySelector('.url-button');
-        const urlInput = document.querySelector('.url-input');
-        const streamlitInput = document.querySelector('[data-testid="stTextInput"] input');
-        
-        if (urlButton && urlInput && streamlitInput) {
-            // URL 입력창의 값이 변경될 때 Streamlit 입력창과 동기화
-            urlInput.addEventListener('input', (e) => {
-                streamlitInput.value = e.target.value;
-                // Streamlit의 입력 이벤트 트리거
-                const event = new Event('input', { bubbles: true });
-                streamlitInput.dispatchEvent(event);
-            });
-            
-            // 버튼 클릭 시 Enter 키 이벤트 시뮬레이션
-            urlButton.addEventListener('click', () => {
-                streamlitInput.value = urlInput.value;
-                // Enter 키 이벤트 시뮬레이션
-                const enterEvent = new KeyboardEvent('keypress', {
-                    key: 'Enter',
-                    code: 'Enter',
-                    keyCode: 13,
-                    bubbles: true
-                });
-                streamlitInput.dispatchEvent(enterEvent);
-            });
-        }
-    }
-    
-    // DOM이 로드된 후 초기화 함수 실행
-    if (document.readyState === 'complete') {
-        init();
-    } else {
-        document.addEventListener('DOMContentLoaded', init);
-    }
-</script>
 """, unsafe_allow_html=True)
 
 # 제목을 커스텀 HTML로 표시
@@ -268,18 +167,18 @@ st.markdown('<h1 class="main-title">웹 페이지 요약 애플리케이션</h1>
 # API 키 입력
 API_KEY = st.secrets["GEMINI_API_KEY"]
 
-# URL 입력 부분을 다음과 같이 수정
+# URL 입력 받기
 st.markdown("""
-<div class="url-container">
-    <input type="text" class="url-input" placeholder="https://example.com">
-    <button class="url-button">
-        <span>➜</span>
-    </button>
-</div>
+    <div class="url-input-container">
+        <div class="stTextInput">
+            <input type="text" id="url-input" placeholder="https://example.com">
+        </div>
+        <button class="inner-arrow-button">➜</button>
+    </div>
 """, unsafe_allow_html=True)
 
-# 실제 기능을 위한 text_input은 숨김 처리
-url = st.text_input("", placeholder="https://example.com", key="url_input", label_visibility="collapsed")
+# 기존의 st.text_input을 스타일이 적용된 버전으로 대체
+url = st.text_input("", placeholder="https://example.com", key="styled_url_input")
 
 # URL 입력 후 요약 스타일 선택
 summary_style = st.selectbox(
