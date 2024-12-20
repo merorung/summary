@@ -170,11 +170,11 @@ if url:
 
             # 선택된 스타일에 따라 시스템 지시어 변경
             system_instructions = {
-                "기본 불렛포인트 요약": "URL의 콘텐츠를 한국어로 불렛포인트 형식으로 3줄로 요약해줘. 어미는 ~임, ~함과 같이 간결하게 할 것. 각 문장의 앞에는 이모지를 하나 넣을 것.",
-                "TLDR 한 줄 요약": "URL의 콘텐츠를 한 문장으로 간단히 요약해줘. 'TLDR: ' 로 시작할 것.",
-                "5가지 핵심 키워드": "URL의 콘텐츠에서 가장 중요한 5가지 키워드를 추출하고, 각각에 대해 한 줄로 설명해줘.",
-                "뉴스 기사 형식": "URL의 콘텐츠를 뉴스 기사 형식으로 제목과 함께 3문단으로 요약해줘.",
-                "Q&A 형식": "URL의 콘텐츠를 Q&A 형식으로 가장 중요한 3가지 질문과 답변으로 정리해줘."
+                "기본 불렛포인트 요약": "다음을 한국어로 불렛포인트 형식으로 3줄로 요약해줘. 어미는 ~임, ~함과 같이 간결하게 할 것. 각 문장의 앞에는 이모지를 하나 넣을 것.",
+                "TLDR 한 줄 요약": "다음 내용을 한 문장으로 간단히 요약해줘. 'TLDR: ' 로 시작할 것.",
+                "5가지 핵심 키워드": "다음 내용에서 가장 중요한 5가지 키워드를 추출하고, 각각에 대해 한 줄로 설명해줘.",
+                "뉴스 기사 형식": "다음 내용을 뉴스 기사 형식으로 제목과 함께 3문단으로 요약해줘.",
+                "Q&A 형식": "다음 내용을 Q&A 형식으로 가장 중요한 3가지 질문과 답변으로 정리해줘."
             }
 
             system_instruction = system_instructions[summary_style]
@@ -187,15 +187,24 @@ if url:
                 safety_settings=safety_settings
             )
 
-            # 채팅 세션 시작 및 응답 생성
-            chat_session = model.start_chat(history=[])
-            messages_with_metadata = chat_session.send_message(cleaned_text)
+            # 프롬프트 구성
+            prompt = f"""
+            역할: 당신은 전문적인 콘텐츠 요약 도우미입니다.
+            
+            지시사항: {system_instruction}
+            
+            내용:
+            {cleaned_text}
+            """
+
+            # 직접 프롬프트로 응답 생성 (채팅 세션 대신)
+            response = model.generate_content(prompt)
             
             # 결과를 커스텀 컨테이너에 표시
             st.markdown(f"""
             <div class="results-container">
                 <h3>요약 결과</h3>
-                <p>{messages_with_metadata.text}</p>
+                <p>{response.text}</p>
             </div>
             """, unsafe_allow_html=True)
 
