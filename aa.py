@@ -175,29 +175,34 @@ st.markdown("""
     .stTextInput input {
         width: 100%;
         padding-right: 50px !important;  /* 버튼을 위한 공간 확보 */
-col1, col2 = st.columns([15, 1])  # 더 넓은 비율로 조정
-with col1:
-    url = st.text_input("URL을 입력하세요:", placeholder="https://example.com")
-with col2:
-    st.markdown("""
-        <style>
-        .arrow-button {
-            margin-top: 25px;
-            padding: 10px 20px;
-            background-color: #475569;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-        .arrow-button:hover {
-            background-color: #334155;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-        }
-        </style>
-        <button class="arrow-button">➜</button>
-    """, unsafe_allow_html=True)
+    }
+    
+    /* 내부 화살표 버튼 스타일 */
+    .inner-arrow-button {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: #475569;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        width: 35px;
+        height: 35px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease;
+    }
+    
+    .inner-arrow-button:hover {
+        background-color: #334155;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+url = st.text_input("URL을 입력하세요:", placeholder="https://example.com")
 
 # URL 입력 후 요약 스타일 선택
 summary_style = st.selectbox(
