@@ -166,6 +166,7 @@ API_KEY = st.secrets["GEMINI_API_KEY"]
 # URL 입력 받기
 col1, col2 = st.columns([6, 1])  # 6:1 비율로 분할
 with col1:
+    url = st.text_input("URL을 입력하세요:", placeholder="https://example.com", label_visibility="visible")
     st.markdown("""
         <div class="url-input-container">
             <div class="stTextInput">
