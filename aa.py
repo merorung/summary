@@ -164,7 +164,19 @@ st.markdown('<h1 class="main-title">웹 페이지 요약 애플리케이션</h1>
 API_KEY = st.secrets["GEMINI_API_KEY"]
 
 # URL 입력 받기
-url = st.text_input("URL을 입력하세요:", placeholder="➜  https://example.com")
+url = st.text_input("URL을 입력하세요:", placeholder="https://example.com  ➜")
+
+# URL 입력 후 요약 스타일 선택
+summary_style = st.selectbox(
+    "요약 스타일을 선택하세요:",
+    [
+        "일반 요약",
+        "세줄 요약",
+        "TLDR 한 줄 요약",
+        "5가지 핵심 키워드",
+        "Q&A 형식"
+    ]
+)
 
 # URL 입력이 있을 때만 실행
 if url:
