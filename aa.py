@@ -204,7 +204,8 @@ st.markdown("""
     }
     
     .url-button span {
-        font-size: 1.25rem;
+        font-size: 1.5rem;
+        font-weight: 700;
     }
     
     /* 실제 Streamlit input 숨기기 */
@@ -220,6 +221,45 @@ st.markdown("""
         border: 0;
     }
 </style>
+
+<script>
+    // JavaScript 코드를 실행하기 위한 함수
+    function init() {
+        const urlButton = document.querySelector('.url-button');
+        const urlInput = document.querySelector('.url-input');
+        const streamlitInput = document.querySelector('[data-testid="stTextInput"] input');
+        
+        if (urlButton && urlInput && streamlitInput) {
+            // URL 입력창의 값이 변경될 때 Streamlit 입력창과 동기화
+            urlInput.addEventListener('input', (e) => {
+                streamlitInput.value = e.target.value;
+                // Streamlit의 입력 이벤트 트리거
+                const event = new Event('input', { bubbles: true });
+                streamlitInput.dispatchEvent(event);
+            });
+            
+            // 버튼 클릭 시 Enter 키 이벤트 시뮬레이션
+            urlButton.addEventListener('click', () => {
+                streamlitInput.value = urlInput.value;
+                // Enter 키 이벤트 시뮬레이션
+                const enterEvent = new KeyboardEvent('keypress', {
+                    key: 'Enter',
+                    code: 'Enter',
+                    keyCode: 13,
+                    bubbles: true
+                });
+                streamlitInput.dispatchEvent(enterEvent);
+            });
+        }
+    }
+    
+    // DOM이 로드된 후 초기화 함수 실행
+    if (document.readyState === 'complete') {
+        init();
+    } else {
+        document.addEventListener('DOMContentLoaded', init);
+    }
+</script>
 """, unsafe_allow_html=True)
 
 # 제목을 커스텀 HTML로 표시
@@ -233,7 +273,7 @@ st.markdown("""
 <div class="url-container">
     <input type="text" class="url-input" placeholder="https://example.com">
     <button class="url-button">
-        <span>→</span>
+        <span>➜</span>
     </button>
 </div>
 """, unsafe_allow_html=True)
